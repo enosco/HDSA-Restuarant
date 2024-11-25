@@ -65,7 +65,7 @@ public class Driver
 			   + "\t8.   Display info about customer parties being served.\n\n");  
     }
 
-    public static void initialize(List<Section> sections)
+    public static void initialize(List<Section> sections) throws IOException
     {
 	// Sections are hard coded for now. Later, prompt the user
 	// for the number of sections they want.
@@ -79,7 +79,7 @@ public class Driver
 	    // Prompt user for number of tables
 	    Section sect = sections.get(i);
 	    
-	    System.out.print(">>How many tables does your " + sect.getName() + " section have? ");
+	    System.out.print(">>How many tables does your " + sect.getSectionName() + " section have? ");
 	    int numTables = Integer.parseInt(stdin.readLine().trim());
 	    System.out.println(numTables);
 	    
