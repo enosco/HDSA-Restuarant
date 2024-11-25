@@ -7,7 +7,7 @@ public class Driver
     {
 	List<Section> sections = new List<Section>();
 	Queue<Party> waiting = new Queue<Party>();
-	
+
 	initialize(sections);
 
 	System.out.print("Make your menu selection now: ");
@@ -18,7 +18,7 @@ public class Driver
 	    switch (option) {
 		case 0: break;// exit		    
 		case 1: // party enters
-		    welcomeParty(waitingQueue);
+		    welcomeParty(waiting);
 		    break;
 		case 2: // serve waiting party
 		    seatParty(sections, waiting);
@@ -50,17 +50,31 @@ public class Driver
 	
 	System.out.println("We are closing the restaurant...Good Bye!");
     }
-       
-    public static void initilize(List<Section> sections)
+
+    public static void printMenu()
+    {
+	System.out.println("Select from the following menu:\n"
+			   + "\t0.  Close the restaurant.\n"
+			   + "\t1.   Customer party enters the restaurant.\n"
+			   + "\t2.   Customer party is seated and served.\n"
+			   + "\t3.   Customer party leaves the restaurant.\n"
+			   + "\t4.   Add a table.\n"
+			   + "\t5.   Remove a table.\n"
+			   + "\t6.   Display available tables.\n"
+			   + "\t7.   Display info about waiting customer parties.\n"
+			   + "\t8.   Display info about customer parties being served.\n\n");  
+    }
+
+    public static void initialize(List<Section> sections)
     {
 	// Sections are hard coded for now. Later, prompt the user
 	// for the number of sections they want.
-	sections.add(new Section(0, "pet-friendly"));
-	sections.add(new Section(1, "non-pet-friendly"));
+	sections.add(0, new Section("pet-friendly"));
+	sections.add(1, new Section("non-pet-friendly"));
 	
 	System.out.println("Enter your restaurant configuration:");
 	// For each section
-	int size = section.size();
+	int size = sections.size();
 	for (int i = 0; i < size; i++) {	    
 	    // Prompt user for number of tables
 	    Section sect = sections.get(i);
@@ -70,7 +84,7 @@ public class Driver
 	    System.out.println(numTables);
 	    
 	    // For [number of tables] loops
-	    for (int i = 0; i < numTables; i++) {
+	    for (int j = 0; i < numTables; i++) {
 		
                 // Prompt user for tableName until unique name is given	       
 		System.out.print(">>Enter table name:");
@@ -102,29 +116,12 @@ public class Driver
 	    }
 	    
 	}
-
-	printMen();
+	
 	// Print menu and begin
-
-
+	printMenu();
     }
-
-    public static void printMenu()
-    {
-	System.out.println("Select from the following menu:\n"
-			   + "\t0.  Close the restaurant.\n"
-			   + "\t1.   Customer party enters the restaurant.\n"
-			   + "\t2.   Customer party is seated and served.\n"
-			   + "\t3.   Customer party leaves the restaurant.\n"
-			   + "\t4.   Add a table.\n"
-			   + "\t5.   Remove a table.\n"
-			   + "\t6.   Display available tables.\n"
-			   + "\t7.   Display info about waiting customer parties.\n"
-			   + "\t8.   Display info about customer parties being served.\n\n");  
-    }
-
     
-    public static void welcomeParty()
+    public static void welcomeParty(Queue<Party> waiting)
     {	
 	// Prompt for partyName until unique name is given
         	// if waitingQueue contains party with partyName OR section.hasParty(partyName) == true → partyName is not unique, prompt again
@@ -134,7 +131,7 @@ public class Driver
 	// Enqueue newParty onto waitingQueue
     }
 
-    public static void seatParty()
+    public static void seatParty(List<Section> sections, Queue<Party> waiting)
     {
 	// Dequeue nextParty from the front of waitingQueue
 	// Store nextParty’s name to keep track of original order of the queue
@@ -151,7 +148,7 @@ public class Driver
 	// If no parties could be seated -->  Display failure
     }
 
-    public static void removeParty()
+    public static void removeParty(List<Section> sections, Queue<Party> waiting)
     {
 	// Prompt for partyName of leaving party
 	// For each section until a match is found
@@ -170,7 +167,7 @@ public class Driver
 	// Else → match not found, display failure
     }
 
-    public static void addTable()
+    public static void addTable(List<Section> sections)
     {
 	// Prompt user for section to add to
 	// Prompt user for tableName until unique name is given
@@ -182,7 +179,7 @@ public class Driver
         	// newTable is added to availableTables
     }
 
-    public static void removeTable()
+    public static void removeTable(List<Section> sections)
     {
 	// Prompt user for section to remove from
 	// Prompt user for tableName
@@ -199,19 +196,19 @@ public class Driver
 
     }
 
-    public static void displayAvailableTables()
+    public static void displayAvailableTables(List<Section> sections)
     {
 	// For each section
         	// section.getAvailableTableInfo()
                   	// Display name of section along with size and contents of availableTables (.size() & .toString() )
     }
 
-    public static void displayWaiting()
+    public static void displayWaiting(Queue<Party> waiting)
     {
 	// Display contents of waitingList (.toString() )
     }
 
-    public static void displayServing()
+    public static void displayServing(List<Section> sections)
     {
 	// For each section
         	// section.getServingInfo()
