@@ -133,6 +133,11 @@ public class Driver
 
     public static void seatParty(List<Section> sections, Queue<Party> waiting)
     {
+	if (waiting.isEmpty()) {
+	    System.out.println("\tNo customers to serve!\n");
+	} else {
+	    
+
 	// Dequeue nextParty from the front of waitingQueue
 	// Store nextParty’s name to keep track of original order of the queue
 	// Loop until nextParty is seated OR no party could be seated (nextParty == original front of queue)
@@ -146,10 +151,27 @@ public class Driver
 	// If a party was successfully seated → rotate through queue items until original FIFO order is restored
         	// dequeue and enqueue from waitingQueue until peek returns original front of queue -> Display success
 	// If no parties could be seated -->  Display failure
+	}
     }
 
     public static void removeParty(List<Section> sections, Queue<Party> waiting)
     {
+	// check if the restuarant is empty
+	boolean hasCustomers = false;
+      
+	int size = sections.size();
+	for (int i = 0; i < size; i++) {
+	    Section sect = sections.get(i);
+	    if (sect.hasCustomers()) {
+		hasCustomers = true;
+	    }
+	}
+
+	if (!hasCustomers) {
+	    System.out.println("\tNo customers are being served!\n");
+	} else {
+	   
+	
 	// Prompt for partyName of leaving party
 	// For each section until a match is found
         	// section.remove(partyName)
@@ -165,6 +187,7 @@ public class Driver
          	// search through waitingList to verify that specified party is not still waiting
          	// Display location of match in waitingList
 	// Else → match not found, display failure
+	}
     }
 
     public static void addTable(List<Section> sections)
@@ -198,10 +221,8 @@ public class Driver
 
     public static void displayAvailableTables(List<Section> sections)
     {
-	// For each section
-        	// section.getAvailableTableInfo()
-                  	// Display name of section along with size and contents of availableTables (.size() & .toString() )
 	int size = sections.size();
+      
 	for (int i = 0; i < size; i++) {
 	    Section sect = sections.get(i);
 	    System.out.printf("The following %d tables are available in the %s section:%n",
@@ -213,7 +234,13 @@ public class Driver
 
     public static void displayWaiting(Queue<Party> waiting)
     {
-	// Display contents of waitingList (.toString() )
+
+	if (waiting.isEmpty()) {
+	    System.out.println("\tNo customers are waiting for tables!\n");
+	} else {
+	    // FIXME
+	}
+
     }
 
     public static void displayServing(List<Section> sections)
@@ -221,5 +248,22 @@ public class Driver
 	// For each section
         	// section.getServingInfo()
                 	// Display name of section along with contents of occupiedTables (.size() & .toString() )
+
+	boolean hasCustomers = false;
+	
+	int size = sections.size();
+	for (int i = 0; i < size; i++) {
+	    Section sect = sections.get(i);
+
+	    if (sect.hasCustomers()) {		
+		hasCustomers = true;		
+		// FIXME: PRINT SERVING INFO FOR SECTION
+	    }
+	    
+	}
+
+	if (!hasCustomers) {
+	    System.out.println("\tNo customers are being served!\n");
+	}	
     }
 }
