@@ -2,7 +2,6 @@ public class Table extends KeyedItem<Integer>
 {
     private String name;
     
-    
     public Table(String name, int seats)
     {
 	super(seats);

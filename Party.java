@@ -8,5 +8,11 @@ public class Party
 	this.size = size;	
     }
 
-    // FIXME: Add functionality
+    public String getName() {
+	return name;
+    }
+
+    public int getSize() {
+	return size;
+    }
 }
