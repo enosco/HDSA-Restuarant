@@ -53,7 +53,7 @@ public class Driver
 
     public static void printMenu()
     {
-	System.out.println("Select from the following menu:\n"
+	System.out.println("\nSelect from the following menu:\n"
 			   + "\t0.  Close the restaurant.\n"
 			   + "\t1.   Customer party enters the restaurant.\n"
 			   + "\t2.   Customer party is seated and served.\n"
@@ -75,16 +75,17 @@ public class Driver
 	System.out.println("Enter your restaurant configuration:");
 	// For each section
 	int size = sections.size();
-	for (int i = 0; i < size; i++) {	    
+	for (int i = 0; i < size; i++) {
 	    // Prompt user for number of tables
 	    Section sect = sections.get(i);
 	    
 	    System.out.print(">>How many tables does your " + sect.getSectionName() + " section have? ");
 	    int numTables = Integer.parseInt(stdin.readLine().trim());
 	    System.out.println(numTables);
+
 	    
 	    // For [number of tables] loops
-	    for (int j = 0; i < numTables; i++) {
+	    for (int j = 0; j < numTables; j++) {
 		
                 // Prompt user for tableName until unique name is given	       
 		System.out.print(">>Enter table name:");
@@ -111,8 +112,7 @@ public class Driver
 		// Create newTable
 		// section.addTable(newTable)
 		// newTable is added to availableTables
-		sect.addTable(new Table(tableName, numSeats));
-      		
+		sect.addTable(new Table(tableName, numSeats));      		
 	    }
 	    
 	}
@@ -201,6 +201,14 @@ public class Driver
 	// For each section
         	// section.getAvailableTableInfo()
                   	// Display name of section along with size and contents of availableTables (.size() & .toString() )
+	int size = sections.size();
+	for (int i = 0; i < size; i++) {
+	    Section sect = sections.get(i);
+	    System.out.printf("The following %d tables are available in the %s section:%n",
+			      sect.getAvailableCount(), sect.getSectionName());
+	    
+	    System.out.println(sect.getAvailableTables());
+	}
     }
 
     public static void displayWaiting(Queue<Party> waiting)
