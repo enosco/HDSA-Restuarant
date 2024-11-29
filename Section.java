@@ -1,3 +1,4 @@
+
 public class Section
 {
     /*
@@ -21,6 +22,17 @@ public class Section
     public boolean hasParty(String partyName)
     {
 	// FIXME
+	boolean found = false;
+	int size = occupied.size();
+	for (int i = 0; !found && i < size; i++) {
+	    String currName = occupied.get(i).getOccupantName();
+	    
+	    if (currName.equals(partyName)) {
+		found = true;
+	    }
+	}
+	
+
 	return false;
     }
     
@@ -83,10 +95,18 @@ public class Section
 	return sectionName;
     }
 
+    public boolean hasAvailableTables() {
+	return available.size() > 0;
+    }
+   
     public int getAvailableCount() {
 	return available.size();
     }
 
+    public boolean hasCustomers() {
+	return occupied.size() > 0;
+    }
+   
     public int getServingCount() {
 	return occupied.size();
     }
