@@ -33,7 +33,7 @@ public class Section
 	}
 	
 
-	return false;
+	return !found;
     }
     
     public boolean hasTable(String tableName)
@@ -76,18 +76,65 @@ public class Section
 
     public Table removeTable(String tableName) {
 	// FIXME
-	return null;      
+	
+	int size = available.size();
+	Table ret = null;
+	boolean removed = false;
+
+	for ( int i=0; i<size && !removed; i++)
+	{
+		Table t = available.get(i);
+		if(t.getName().equals(tableName))
+		{
+			ret = available.remove(t.getCapacity());
+			removed = true;
+		}
+	}
+	return ret;      
     }    
     
     public boolean seatParty(Party party) {
 	// FIXME
-	return false;
+	
+	int size = available.size();
+	
+	boolean seated = false;
+
+	for( int i = 0; i< size && !seated; i++)
+	{
+		Table t =  available.get(i);
+		if(!(t.getCapacity() < party.getSize()))
+		{
+			occupied.add(new OccupiedTable(t.getName(), t.getCapacity(), party));
+			available.remove(t.getKey());
+			seated = true;
+		}
+	}
+
+	return seated;
 
     }
 
     public OccupiedTable removeParty(String partyName) {
 	// FIXME
-	return null;
+	
+
+	int size = occupied.size();
+	OccupiedTable ret = null;
+	boolean removed = false;
+
+	for ( int i=0; i<size && !removed; i++)
+	{
+		OccupiedTable t = occupied.get(i);
+		if(t.getOccupantName().equals(partyName))
+		{
+			ret = occupied.remove(t.getCapacity());
+			available.add(new Table(t.getName(), t.getCapacity()));
+			removed = true;
+		}
+	}
+	return ret;
+
 	
     }
 
