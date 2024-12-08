@@ -15,7 +15,6 @@ public class Section {
     public boolean hasTable(String tableName) {		      	
 	boolean result;
 
-	System.out.println(tableNames.search(tableName));
 	if (tableNames.search(tableName) < 0) {
 	    result = false;
 	} else {
