@@ -160,6 +160,8 @@ public class Driver
 
 	    waiting.enqueue(p);
 
+	    System.out.println();
+
 	    return waitingListSize + 1;
 
 	    
@@ -192,19 +194,19 @@ public class Driver
 					section = sections.get(1);
 			}
 
-			boolean seated = section.seatParty(party);
+			Table table = section.seatParty(party);
 
-			if(seated)
+			if(table != null)
 			{
 				seating = false;
-				System.out.println("SUCCESS:::: " + party);
+				System.out.printf("Serving %s at %s%n%n.", party, table);
 			}
 			else
 			{
-			    System.out.println("UNABLE TO SEAT::::::" + party);
-				numShifts++;
-				waiting.enqueue(party);
-				party = waiting.dequeue();
+			    System.out.printf("Could not find a table with %d seats for Customer %s%n", party.getSize(), party.getKey()); 
+			    numShifts++;
+			    waiting.enqueue(party);
+			    party = waiting.dequeue();
 			}
 
 
