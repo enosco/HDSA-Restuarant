@@ -110,7 +110,7 @@ public class Driver
 		// Prompt for number of seats
 		System.out.print(">>Enter number of seats:");
 		int numSeats = Integer.parseInt(stdin.readLine().trim());
-		System.out.println(numTables);
+		System.out.println(numSeats);
 
 		// Create newTable
 		// section.addTable(newTable)
@@ -226,7 +226,10 @@ public class Driver
 		else
 		{
 			waitingListSize--;
-			if(numShifts < (waitingListSize >> 1))
+
+			// changed '<' to '<=', check if this breaks anything
+			// 
+			if(numShifts <= (waitingListSize >> 1))
 			{
 				for(int i = 0; i<numShifts; i++)
 				{
@@ -333,16 +336,44 @@ public class Driver
 	}
     }
 
-    public static void addTable(List<Section> sections)
+    public static void addTable(List<Section> sections) throws IOException
     {
+	System.out.println(">>You are now adding a table.");
+
 	// Prompt user for section to add to
-	// Prompt user for tableName until unique name is given
-         	// If section.hasTable(tableName) == true → tableName is not unique, prompt again
-                	// Repeat until unique name is given
+	System.out.print(" To which section would you like to add this table?(P/N):");
+	String sectStr = stdin.readLine().trim();
+	System.out.println(sectStr);
+
+	Section sect = (sectStr.equals("P")) ? sections.get(0) : sections.get(1); 
+	
+	// Prompt user for tableName until unique name is given	       
+	System.out.print(">>Enter table name:");
+	String tableName = stdin.readLine().trim();
+	System.out.println(tableName);
+	            
+	// Repeat until unique name is given
+	while (sect.hasTable(tableName)) {
+	    
+	    System.out.printf(" This table already exists in the %s section! Please enter another table name", sect.getSectionName());
+	    
+	    System.out.print(">>Enter table name:");
+	    tableName = stdin.readLine().trim();
+	    System.out.println(tableName);
+	}
+	
 	// Prompt for number of seats
+	System.out.print(">>Enter number of seats:");
+	int numSeats = Integer.parseInt(stdin.readLine().trim());
+	System.out.println(numSeats);
+	
 	// Create newTable
 	// section.addTable(newTable)
-        	// newTable is added to availableTables
+	// newTable is added to availableTables
+	sect.addTable(new Table(tableName, numSeats));
+
+	System.out.println();
+	
     }
 
     public static void removeTable(List<Section> sections)
