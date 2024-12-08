@@ -216,6 +216,7 @@ public class Driver
 		}
 		else
 		{
+			waitingListSize--;
 			if(numShifts < (waitingListSize >> 1))
 			{
 				for(int i = 0; i<numShifts; i++)
@@ -230,7 +231,6 @@ public class Driver
 					waiting.enqueue(waiting.dequeue());
 				}
 			}
-			waitingListSize--;
 		}
 
 
