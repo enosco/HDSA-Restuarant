@@ -178,14 +178,12 @@ public class Driver
 	} else {
 		int numShifts = 0; //Keeps track of the number of parties that weren't able to be seated
 
-
+		
 		boolean seating = true;
 		Party party = waiting.dequeue();
 		Section section = sections.get(0); //placeholder so it is able to compile
 
-		do{
-
-			
+		do {			
 			switch(party.getSection())
 			{
 				case "pet-friendly":
@@ -194,22 +192,26 @@ public class Driver
 					section = sections.get(1);
 			}
 
-			boolean seated = !section.seatParty(party);
+			boolean seated = section.seatParty(party);
 
 			if(seated)
 			{
 				seating = false;
+				System.out.println("SUCCESS:::: " + party);
 			}
 			else
 			{
+			    System.out.println("UNABLE TO SEAT::::::" + party);
 				numShifts++;
 				waiting.enqueue(party);
 				party = waiting.dequeue();
 			}
 
 
-		} while(seating &&  numShifts != waitingListSize);
+		} while(seating && numShifts != waitingListSize);
 
+
+		// return queue to original order
 		if(numShifts == waitingListSize && !seating)
 		{
 			System.out.println("Unable to accomadate any party");
@@ -372,6 +374,7 @@ public class Driver
 	if (waiting.isEmpty()) {
 	    System.out.println("\tNo customers are waiting for tables!\n");
 	} else {
+	    System.out.println("The following customer parties are waiting for tables:");
 	    System.out.println(waiting);
 	}
 
@@ -391,13 +394,16 @@ public class Driver
 
 	    if (sect.hasCustomers()) {		
 		hasCustomers = true;		
-		// FIXME: PRINT SERVING INFO FOR SECTION
+
+		System.out.println("The following customers are being served in the pet-friendly section:");
+		System.out.println(sect.getServing());
+
 	    }
 	    
 	}
 
 	if (!hasCustomers) {
 	    System.out.println("\tNo customers are being served!\n");
-	}	
+	}
     }
 }

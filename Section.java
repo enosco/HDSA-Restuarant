@@ -76,30 +76,31 @@ public class Section {
 	boolean seated;
 
 	int index = available.search(party.getSize());
-	if (index < 0) {
+/*	if (index < 0) {
 	    
 	    index = -(index+1);
 	   	    
-	    int size = available.size();
-	    seated = false;
-	    
-	    for (int i = index; !seated && i < size; i++) {
-
-		Table curr = available.get(i);
-		
-		if (curr.getKey() >= party.getSize()) {
-		    available.remove(i);
-		    serving.add(new SeatedParty(party.getKey(), party.getSection(), party.getSize(), curr));
-		    seated = true;
-		}
+	    if (available.get(i).getKey()
 		
 	    }	   
 	} else {
 	    Table table = available.remove(index);
 	    serving.add(new SeatedParty(party.getKey(), party.getSection(), party.getSize(), table));
 	    seated = true;	    
+	    }*/
+
+	if (index < 0) {
+	    index = -(index+1);
 	}
-		
+       
+	if (index == available.size()) {
+	    seated = false;
+	} else {
+	    Table table = available.remove(index);
+	    serving.add(new SeatedParty(party.getKey(), party.getSection(), party.getSize(), table));
+	    seated = true;	    
+	    
+	}
 	return seated;
     }
 
