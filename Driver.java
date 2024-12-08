@@ -376,7 +376,7 @@ public class Driver
 	
     }
 
-    public static void removeTable(List<Section> sections)
+    public static void removeTable(List<Section> sections) throws IOException
     {
 	// Prompt user for section to remove from
 	// Prompt user for tableName
@@ -391,6 +391,29 @@ public class Driver
                  	// Throw NoSuchElementException
                    	// Driver catches exception, informs user that table could not be found
 
+	System.out.println(">>You are now adding a table.");
+
+	// Prompt user for section to add to
+	System.out.print(" To which section would you like to add this table?(P/N):");
+	String sectStr = stdin.readLine().trim();
+	System.out.println(sectStr);
+
+	Section sect = (sectStr.equals("P")) ? sections.get(0) : sections.get(1);
+	
+	// Prompt user for tableName until unique name is given	       
+	System.out.print(">>Enter table name:");
+	String tableName = stdin.readLine().trim();
+	System.out.println(tableName);
+	
+	Table table = sect.removeTable(tableName);
+
+	if (table != null) {
+	    System.out.printf("Table %s has been removed", table.getKey());
+	} else {
+	    System.out.printf(" This table doesn't exists in the %s section! Please enter another table name.%n%n", sect.getSectionName()); 
+
+	}
+	
     }
 
     public static void displayAvailableTables(List<Section> sections)
@@ -433,7 +456,7 @@ public class Driver
 	    if (sect.hasCustomers()) {		
 		hasCustomers = true;		
 
-		System.out.println("The following customers are being served in the pet-friendly section:");
+		System.out.printf("The following customers are being served in the %s section:%n", sect.getSectionName());
 		System.out.println(sect.getServing());
 
 	    }
