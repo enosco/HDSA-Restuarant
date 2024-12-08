@@ -295,7 +295,7 @@ public class AscendinglyOrderedList<T extends KeyedItem<KT>, KT extends Comparab
 
         for(int i = 0; i < numItems; i++)
         {
-            contents.append(items[i] + " ");
+            contents.append(items[i] + "\n");
         }
         return contents.toString();
     }

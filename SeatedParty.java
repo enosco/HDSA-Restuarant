@@ -7,6 +7,10 @@ public class SeatedParty extends Party {
 	this.table = table;
     }
 
+    public Table getTable() {
+	return table;	
+    }
+    
     public String toString() {
 	return super.toString() + " at " + table.toString();
     }
