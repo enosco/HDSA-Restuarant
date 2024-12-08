@@ -3,19 +3,19 @@ public class Table extends KeyedItem<Integer> {
     private String name;
     
     public Table(String name, int seats) {
-	this.name = name;
 	super(seats);
+	this.name = name;
     }
 
     public String getName() {
-	return getKey();
+	return name;
     }
     
     public int getCapacity() {
-	return seats;
+	return super.getKey();
     }
     
     public String toString() {
-	return "table " + this.getKey() + " with " + seats + " seats.";
+	return "table " + name + " with " + getKey() + " seats.";
     }
 }

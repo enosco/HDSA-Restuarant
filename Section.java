@@ -1,24 +1,24 @@
 public class Section {
     
     private String sectionName;
-    private AscendinglyOrderedListD<Table, Integer> availableTables; // sorted by table name
-    private AscendinglyOrderedList<SeatedParty, String> servingParties;
+    private AscendinglyOrderedListD<Table, Integer> available; // sorted by table name
+    private AscendinglyOrderedList<SeatedParty, String> serving;
     private AscendinglyOrderedList<Name, String> tableNames;
     
     public Section(String name) {
         this.sectionName = name;
-	available = new AscendinglyOrderedList<Table, String>();
-	occupied = new AscendinglyOrderedList<SeatedParty, String>();
-	tableNames = new AscendinglyOrderedList<NamedItem, String>();
+	this.available = new AscendinglyOrderedListD<Table, Integer>();
+	this.serving = new AscendinglyOrderedList<SeatedParty, String>();
+	this.tableNames = new AscendinglyOrderedList<Name, String>();
     }
     
     public boolean hasTable(String tableName) {		      	
 	boolean result;
 
-	if (tableNames.search(tableNames) != null) {
-	    result = true;
-	} else {
+	if (tableNames.search(tableName) < 0) {
 	    result = false;
+	} else {
+	    result = true;
 	}
 
 	return result;
@@ -26,11 +26,15 @@ public class Section {
     }
 
     public boolean addTable(Table table) {
-
+	
 	boolean added;
 	if (hasTable(table.getName())) {
-		availableTables.add(table);
-	    }
+	    available.add(table);
+	    tableNames.add(new Name(table.getName()));
+	    added = true;
+	} else {
+	    added = false;
+	}
 
 	return added;
     }
@@ -50,7 +54,7 @@ public class Section {
 	    boolean removed = false;
 	    int size = available.size();	   
 	    for (int i = 0; !removed && i < size; i++) {		
-		if (available[i].getName().equals(tableName)) {
+		if (available.get(i).getName().equals(tableName)) {
 		    available.remove(i);
 		    removed = true;
 		}
@@ -65,52 +69,52 @@ public class Section {
 	    target = null;
 	}
 	
-	return result;
+	return target;
     }    
     
-    public boolean seatParty(Party party) {
-	// FIXME
-	
-	int size = available.size();
-	
-	boolean seated = false;
-	/*
-	for( int i = 0; i< size && !seated; i++)
-	{
-		Table t =  available.get(i);
-		if(!(t.getCapacity() < party.getSize()))
-		{
-			occupied.add(new OccupiedTable(t.getName(), t.getCapacity(), party));
-			available.remove(t.getKey());
-			seated = true;
-		}
-	}
-	*/
-	return seated;
+    public boolean seatParty(Party party) {		
+	boolean seated;
 
+	int index = available.search(party.getSize());
+	if (index < 0) {
+	    
+	    index = -(index+1);
+	   	    
+	    int size = available.size();
+	    seated = false;
+	    
+	    for (int i = index; !seated && i < size; i++) {
+
+		Table curr = available.get(i);
+		
+		if (curr.getCapacity() >= party.getSize()) {
+		    available.remove(i);
+		    serving.add(new SeatedParty(party.getName(), party.getSection(), party.getSize(), curr));
+		    seated = true;
+		}
+		
+	    }	   
+	} else {
+	    Table table = available.remove(index);
+	    serving.add(new SeatedParty(party.getName(), party.getSection(), party.getSize(), table));
+	    seated = true;	    
+	}
+		
+	return seated;
     }
 
-    public SeatedParty removeParty(String partyName) 
-    {
-	// FIXME: Return      
+    public SeatedParty removeParty(String partyName) {
+	SeatedParty party;
 
-	OccupiedTable ret = null;
-	boolean removed = false;
+	int index = serving.search(partyName);
 
-	int size = occupied.size();
-	for ( int i=0; i<size && !removed; i++)
-	{
-		OccupiedTable t = occupied.get(i);
-		if(t.getOccupantName().equals(partyName))
-		{
-			ret = occupied.remove(t.getCapacity());
-			available.add(new Table(t.getName(), t.getCapacity()));
-			removed = true;
-		}
+	if (index < 0) {
+	    party = null;
+	} else {
+	    party = serving.remove(index);
 	}
-	return ret;
-
 	
+	return party;
     }
 
     public String getSectionName() {
@@ -126,11 +130,11 @@ public class Section {
     }
 
     public boolean hasCustomers() {
-	return occupied.size() > 0;
+	return serving.size() > 0;
     }
    
     public int getServingCount() {
-	return occupied.size();
+	return serving.size();
     }
     
     public String getAvailableTables() {
