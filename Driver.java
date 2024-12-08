@@ -190,8 +190,10 @@ public class Driver
 			{
 				case "pet-friendly":
 					section = sections.get(0);
+					break;
 				case "non-pet-friendly":
 					section = sections.get(1);
+					break;
 			}
 
 			Table table = section.seatParty(party);
@@ -206,7 +208,10 @@ public class Driver
 			    System.out.printf("Could not find a table with %d seats for Customer %s%n", party.getSize(), party.getKey()); 
 			    numShifts++;
 			    waiting.enqueue(party);
-			    party = waiting.dequeue();
+			    if(numShifts != waitingListSize)
+			    {
+			    	party = waiting.dequeue();
+			    }
 			}
 
 
