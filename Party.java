@@ -13,6 +13,11 @@ public class Party extends KeyedItem<String>
 	return size;
     }
 
+    public String getSection()
+    {
+	    return section;
+    }
+
     public String toString() {
 	return "Customer " + getKey() + " party of " + size + "(" + section + ")";
     }

@@ -6,9 +6,10 @@ public class Driver
     public static void main(String[] args) throws IOException
     {
 	List<Section> sections = new List<Section>();
-	Queue<Party> waiting = new Queue<Party>();
+	DEQ<Party> waiting = new DEQ<Party>();
 
 	AscendinglyOrderedList<Name, String> parties = new AscendinglyOrderedList<Name, String>();
+	int waitingListSize = 0;
 
 	initialize(sections);
 
@@ -20,10 +21,10 @@ public class Driver
 	    switch (option) {
 		case 0: break;// exit		    
 		case 1: // party enters
-		    welcomeParty(waiting, parties);
+		    waitingListSize = welcomeParty(waiting, parties, waitingListSize);
 		    break;
 		case 2: // serve waiting party
-		    seatParty(sections, waiting);
+		    waitingListSize = seatParty(sections, waiting, waitingListSize);
 		    break;
 		case 3: // party leaves
 		    removeParty(sections, waiting);
@@ -123,7 +124,7 @@ public class Driver
 	printMenu();
     }
     
-    public static void welcomeParty(Queue<Party> waiting, AscendinglyOrderedList<Name,String> parties) throws IOException
+    public static int welcomeParty(DEQ<Party> waiting, AscendinglyOrderedList<Name,String> parties, int waitingListSize) throws IOException
     {
 	    String name="";
 	    boolean naming = true;
@@ -159,6 +160,8 @@ public class Driver
 
 	    waiting.enqueue(p);
 
+	    return waitingListSize + 1;
+
 	    
 	// Prompt for partyName until unique name is given
         	// if waitingQueue contains party with partyName OR section.hasParty(partyName) == true → partyName is not unique, prompt again
@@ -168,12 +171,73 @@ public class Driver
 	// Enqueue newParty onto waitingQueue
     }
 
-    public static void seatParty(List<Section> sections, Queue<Party> waiting)
+    public static int seatParty(List<Section> sections, DEQ<Party> waiting, int waitingListSize)
     {
 	if (waiting.isEmpty()) {
 	    System.out.println("\tNo customers to serve!\n");
 	} else {
-	    
+		int numShifts = 0; //Keeps track of the number of parties that weren't able to be seated
+
+
+		boolean seating = true;
+		Party party = waiting.dequeue();
+		Section section = sections.get(0); //placeholder so it is able to compile
+
+		do{
+
+			
+			switch(party.getSection())
+			{
+				case "pet-friendly":
+					section = sections.get(0);
+				case "non-pet-friendly":
+					section = sections.get(1);
+			}
+
+			boolean seated = !section.seatParty(party);
+
+			if(seated)
+			{
+				seating = false;
+			}
+			else
+			{
+				numShifts++;
+				waiting.enqueue(party);
+				party = waiting.dequeue();
+			}
+
+
+		} while(seating &&  numShifts != waitingListSize);
+
+		if(numShifts == waitingListSize)
+		{
+			System.out.println("Unable to accomadate any party");
+		}
+		else
+		{
+			if(numShifts < (waitingListSize >> 1))
+			{
+				for(int i = 0; i<numShifts; i++)
+				{
+					waiting.enqueueFront(waiting.dequeueBack());
+				}
+			}
+			else
+			{
+				for(int i = 0; i<(waitingListSize-numShifts); i++)
+				{
+					waiting.enqueue(waiting.dequeue());
+				}
+			}
+			waitingListSize--;
+		}
+
+
+
+
+
+
 
 	// Dequeue nextParty from the front of waitingQueue
 	// Store nextParty’s name to keep track of original order of the queue
@@ -189,9 +253,10 @@ public class Driver
         	// dequeue and enqueue from waitingQueue until peek returns original front of queue -> Display success
 	// If no parties could be seated -->  Display failure
 	}
+	return waitingListSize;
     }
 
-    public static void removeParty(List<Section> sections, Queue<Party> waiting)
+    public static void removeParty(List<Section> sections, DEQ<Party> waiting)
     {
 	// check if the restuarant is empty
 	boolean hasCustomers = false;
@@ -269,13 +334,13 @@ public class Driver
 	}
     }
 
-    public static void displayWaiting(Queue<Party> waiting)
+    public static void displayWaiting(DEQ<Party> waiting)
     {
 
 	if (waiting.isEmpty()) {
 	    System.out.println("\tNo customers are waiting for tables!\n");
 	} else {
-	    // FIXME
+	    System.out.println(waiting);
 	}
 
     }
