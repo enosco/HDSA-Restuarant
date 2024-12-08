@@ -8,6 +8,8 @@ public class Driver
 	List<Section> sections = new List<Section>();
 	Queue<Party> waiting = new Queue<Party>();
 
+	AscendinglyOrderedList<Name, String> parties = new AscendinglyOrderedList<Name, String>();
+
 	initialize(sections);
 
 	System.out.print("Make your menu selection now: ");
@@ -18,7 +20,7 @@ public class Driver
 	    switch (option) {
 		case 0: break;// exit		    
 		case 1: // party enters
-		    welcomeParty(waiting);
+		    welcomeParty(waiting, parties);
 		    break;
 		case 2: // serve waiting party
 		    seatParty(sections, waiting);
@@ -121,8 +123,43 @@ public class Driver
 	printMenu();
     }
     
-    public static void welcomeParty(Queue<Party> waiting)
-    {	
+    public static void welcomeParty(Queue<Party> waiting, AscendinglyOrderedList<Name,String> parties) throws IOException
+    {
+	    String name="";
+	    boolean naming = true;
+
+	    while(naming)
+	    {
+		    try
+		    {
+			    System.out.print("Enter party name: ");
+			    name = stdin.readLine().trim();
+			    System.out.println(name);
+
+			    parties.add(new Name(name));
+			    naming = false;
+		    }
+		    catch(ListIndexOutOfBoundsException ex)
+		    {
+			    System.out.println("Name already exists, please choose a new one.");
+		    }
+	    }
+	    
+
+	    System.out.print("Enter party size: ");
+	    int size = Integer.parseInt(stdin.readLine().trim());
+	    System.out.println(size);
+
+
+	    System.out.print("Does your party have pets?(Y/N): ");
+	    String section = stdin.readLine().trim();
+	    System.out.println(section);
+
+	    Party p = new Party(name, (section.equals("Y")?"pet-friendly":"non-pet-friendly"), size);
+
+	    waiting.enqueue(p);
+
+	    
 	// Prompt for partyName until unique name is given
         	// if waitingQueue contains party with partyName OR section.hasParty(partyName) == true → partyName is not unique, prompt again
 	// Prompt for group size
