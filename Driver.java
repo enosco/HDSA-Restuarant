@@ -210,7 +210,7 @@ public class Driver
 
 		} while(seating &&  numShifts != waitingListSize);
 
-		if(numShifts == waitingListSize)
+		if(numShifts == waitingListSize && !seating)
 		{
 			System.out.println("Unable to accomadate any party");
 		}
