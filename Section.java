@@ -72,36 +72,23 @@ public class Section {
 	return target;
     }    
     
-    public boolean seatParty(Party party) {		
-	boolean seated;
+    public Table seatParty(Party party) {		
 
 	int index = available.search(party.getSize());
-/*	if (index < 0) {
-	    
-	    index = -(index+1);
-	   	    
-	    if (available.get(i).getKey()
-		
-	    }	   
-	} else {
-	    Table table = available.remove(index);
-	    serving.add(new SeatedParty(party.getKey(), party.getSection(), party.getSize(), table));
-	    seated = true;	    
-	    }*/
-
+	
 	if (index < 0) {
 	    index = -(index+1);
 	}
-       
+
+	Table table;
 	if (index == available.size()) {
-	    seated = false;
+//	    seated = false;
+	    table = null;
 	} else {
-	    Table table = available.remove(index);
-	    serving.add(new SeatedParty(party.getKey(), party.getSection(), party.getSize(), table));
-	    seated = true;	    
-	    
+	    table = available.remove(index);
+	    serving.add(new SeatedParty(party.getKey(), party.getSection(), party.getSize(), table));	    
 	}
-	return seated;
+	return table;
     }
 
     public SeatedParty removeParty(String partyName) {
