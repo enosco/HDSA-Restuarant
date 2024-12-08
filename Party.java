@@ -1,18 +1,19 @@
-public class Party
+public class Party extends KeyedItem<String>
 {
-    private String name;
     private int size;
-
-    public Party(String name, int size) {
-	this.name = name;
-	this.size = size;	
+    private String section;
+    
+    public Party(String name, String section, int size) {
+	super(name);
+	this.section = section;
+	this.size = size;
     }
-
-    public String getName() {
-	return name;
-    }
-
+  
     public int getSize() {
 	return size;
+    }
+
+    public String toString() {
+	return "Customer " + getKey() + " party of " + size + "(" + section + ")";
     }
 }
