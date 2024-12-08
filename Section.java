@@ -15,20 +15,20 @@ public class Section {
     public boolean hasTable(String tableName) {		      	
 	boolean result;
 
+	System.out.println(tableNames.search(tableName));
 	if (tableNames.search(tableName) < 0) {
 	    result = false;
 	} else {
 	    result = true;
 	}
 
-	return result;
-	
+	return result;	
     }
 
     public boolean addTable(Table table) {
 	
 	boolean added;
-	if (hasTable(table.getName())) {
+	if (!hasTable(table.getName())) {
 	    available.add(table);
 	    tableNames.add(new Name(table.getName()));
 	    added = true;
@@ -51,18 +51,19 @@ public class Section {
 	
 	if (hasTable(tableName)) {
 
+	    target = null;
+	    
 	    boolean removed = false;
 	    int size = available.size();	   
 	    for (int i = 0; !removed && i < size; i++) {		
 		if (available.get(i).getName().equals(tableName)) {
-		    available.remove(i);
+		    target = available.remove(i);		    
 		    removed = true;
 		}
 	    }
 
-	    if (!removed) {
-		// throws custom exception here, making it null for now
-		target = null;
+	    if (target == null) {
+		// throw exception here
 	    }
 		
 	} else {
@@ -87,16 +88,16 @@ public class Section {
 
 		Table curr = available.get(i);
 		
-		if (curr.getCapacity() >= party.getSize()) {
+		if (curr.getKey() >= party.getSize()) {
 		    available.remove(i);
-		    serving.add(new SeatedParty(party.getName(), party.getSection(), party.getSize(), curr));
+		    serving.add(new SeatedParty(party.getKey(), party.getSection(), party.getSize(), curr));
 		    seated = true;
 		}
 		
 	    }	   
 	} else {
 	    Table table = available.remove(index);
-	    serving.add(new SeatedParty(party.getName(), party.getSection(), party.getSize(), table));
+	    serving.add(new SeatedParty(party.getKey(), party.getSection(), party.getSize(), table));
 	    seated = true;	    
 	}
 		
