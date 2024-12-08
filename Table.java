@@ -1,25 +1,21 @@
-public class Table extends KeyedItem<Integer>
-{
+public class Table extends KeyedItem<Integer> {
+
     private String name;
     
-    public Table(String name, int seats)
-    {
-	super(seats);
+    public Table(String name, int seats) {
 	this.name = name;
+	super(seats);
     }
 
-    public String getName()
-    {
-	return name;
-    }
-
-    public int getCapacity()
-    {
+    public String getName() {
 	return getKey();
     }
     
-    public String toString()
-    {
-	return "table " + name + " with " + getKey() + " seats.";
+    public int getCapacity() {
+	return seats;
+    }
+    
+    public String toString() {
+	return "table " + this.getKey() + " with " + seats + " seats.";
     }
 }

@@ -1,96 +1,71 @@
-
-public class Section
-{
-    /*
-     * These two collections might be better as a
-     * ascendingly sorted list, sorted by seat count
-     * to make seating by the lowest bound easier
-     *
-     * 
-     */
-    String sectionName;
-    AscendinglyOrderedListD<Table, Integer> available;
-    AscendinglyOrderedListD<OccupiedTable, Integer> occupied;
-
-    public Section(String name)
-    {
+public class Section {
+    
+    private String sectionName;
+    private AscendinglyOrderedListD<Table, Integer> availableTables; // sorted by table name
+    private AscendinglyOrderedList<SeatedParty, String> servingParties;
+    private AscendinglyOrderedList<Name, String> tableNames;
+    
+    public Section(String name) {
         this.sectionName = name;
-	available = new AscendinglyOrderedListD<Table, Integer>();
-	occupied = new AscendinglyOrderedListD<OccupiedTable, Integer>();
-    }
-
-    public boolean hasParty(String partyName)
-    {
-	// FIXME
-	boolean found = false;
-	int size = occupied.size();
-	for (int i = 0; !found && i < size; i++) {
-	    String currName = occupied.get(i).getOccupantName();
-	    
-	    if (currName.equals(partyName)) {
-		found = true;
-	    }
-	}
-	
-
-	return !found;
+	available = new AscendinglyOrderedList<Table, String>();
+	occupied = new AscendinglyOrderedList<SeatedParty, String>();
+	tableNames = new AscendinglyOrderedList<NamedItem, String>();
     }
     
-    public boolean hasTable(String tableName)
-    {
-	boolean found = false;
-	
-	int size = available.size();
-	for (int i = 0; !found && i < size; i++) {
-	    String currName = available.get(i).getName();
-	    
-	    if (currName.equals(tableName)) {
-		found = true;
-	    }
+    public boolean hasTable(String tableName) {		      	
+	boolean result;
+
+	if (tableNames.search(tableNames) != null) {
+	    result = true;
+	} else {
+	    result = false;
 	}
 
-	size = occupied.size();
-	for (int i = 0; !found && i < size; i++) {
-	    String currName = occupied.get(i).getName();
-	    
-	    if (currName.equals(tableName)) {
-		found = true;
-	    }
-	}
+	return result;
 	
-	return found;
     }
 
-    // Note: add logic that prevents
-    // duplicates from being added even though the
-    // driver is currently responsible for that
-    //
-    // The Driver manually checks hasTableName() because
-    // the sample runs show that the name is checked for uniqueness
-    // before the table is added.
-//    public boolean addTable(Table table) {
-    public void addTable(Table table) {
-	// TEMP SOLUTION
-       	available.add(table);	    
+    public boolean addTable(Table table) {
+
+	boolean added;
+	if (hasTable(table.getName())) {
+		availableTables.add(table);
+	    }
+
+	return added;
     }
 
     public Table removeTable(String tableName) {
-	// FIXME
-	
-	int size = available.size();
-	Table ret = null;
-	boolean removed = false;
+    //throws RemoveOccupiedTableException       
+	// search available for table name
+	   // if it exists, remove and return
+	// else, search occupied for table
+	   // if it exists, throw exception
+	// else return null
 
-	for ( int i=0; i<size && !removed; i++)
-	{
-		Table t = available.get(i);
-		if(t.getName().equals(tableName))
-		{
-			ret = available.remove(t.getCapacity());
-			removed = true;
+	Table target;
+	
+	if (hasTable(tableName)) {
+
+	    boolean removed = false;
+	    int size = available.size();	   
+	    for (int i = 0; !removed && i < size; i++) {		
+		if (available[i].getName().equals(tableName)) {
+		    available.remove(i);
+		    removed = true;
 		}
+	    }
+
+	    if (!removed) {
+		// throws custom exception here, making it null for now
+		target = null;
+	    }
+		
+	} else {
+	    target = null;
 	}
-	return ret;      
+	
+	return result;
     }    
     
     public boolean seatParty(Party party) {
@@ -99,7 +74,7 @@ public class Section
 	int size = available.size();
 	
 	boolean seated = false;
-
+	/*
 	for( int i = 0; i< size && !seated; i++)
 	{
 		Table t =  available.get(i);
@@ -110,19 +85,19 @@ public class Section
 			seated = true;
 		}
 	}
-
+	*/
 	return seated;
 
     }
 
-    public OccupiedTable removeParty(String partyName) {
-	// FIXME
-	
+    public SeatedParty removeParty(String partyName) 
+    {
+	// FIXME: Return      
 
-	int size = occupied.size();
 	OccupiedTable ret = null;
 	boolean removed = false;
 
+	int size = occupied.size();
 	for ( int i=0; i<size && !removed; i++)
 	{
 		OccupiedTable t = occupied.get(i);
