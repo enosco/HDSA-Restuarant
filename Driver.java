@@ -27,7 +27,7 @@ public class Driver
 		    waitingListSize = seatParty(sections, waiting, waitingListSize);
 		    break;
 		case 3: // party leaves
-		    removeParty(sections, waiting);
+		    removeParty(sections, waiting, parties);
 		    break;
 		case 4: // add table
 		    addTable(sections);
@@ -256,7 +256,7 @@ public class Driver
 	return waitingListSize;
     }
 
-    public static void removeParty(List<Section> sections, DEQ<Party> waiting)
+    public static void removeParty(List<Section> sections, DEQ<Party> waiting, AscendinglyOrderedList<Name,String> parties) throws IOException
     {
 	// check if the restuarant is empty
 	boolean hasCustomers = false;
@@ -272,6 +272,38 @@ public class Driver
 	if (!hasCustomers) {
 	    System.out.println("\tNo customers are being served!\n");
 	} else {
+		System.out.print("Enter name of leaving party: ");
+		String name = stdin.readLine().trim();
+		System.out.println(name);
+
+		if(parties.search(name) < 0)
+		{
+			System.out.println("Party does not exist");
+		}
+		else
+		{
+			boolean removed = false;
+			int sectionSize = sections.size();
+			SeatedParty party = null;
+			for( int i = 0; i < sectionSize && !removed; i++)
+			{
+				party = sections.get(i).removeParty(name);
+				if(party != null)
+				{
+					removed = true;
+				}
+			}
+
+			if(party == null)
+			{
+				System.out.println("Party is in the waiting list");
+			}
+			else
+			{
+				System.out.println("Removed :" + party);
+				parties.remove(parties.search(name));
+			}
+		}
 	   
 	
 	// Prompt for partyName of leaving party
