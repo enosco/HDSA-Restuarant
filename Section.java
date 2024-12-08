@@ -112,6 +112,7 @@ public class Section {
 	    party = null;
 	} else {
 	    party = serving.remove(index);
+	    available.add(party.getTable());
 	}
 	
 	return party;
@@ -144,7 +145,7 @@ public class Section {
 
     public String getServing() {
 	// FIXME
-	return null;
+	return serving.toString();
     }
 }
     

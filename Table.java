@@ -10,11 +10,7 @@ public class Table extends KeyedItem<Integer> {
     public String getName() {
 	return name;
     }
-    
-    public int getCapacity() {
-	return super.getKey();
-    }
-    
+        
     public String toString() {
 	return "table " + name + " with " + getKey() + " seats.";
     }
