@@ -11,17 +11,22 @@ public class Section {
     private String sectionName;
     private AscendinglyOrderedListD<Table, Integer> available; // sorted by table name
     private AscendinglyOrderedList<SeatedParty, String> serving;
-    private AscendinglyOrderedList<KeyedItem<String>, String> tableNames;
-    
+    private AscendinglyOrderedList<Name, String> tableNames;
+
+    /**
+     * Constructs a new section with the specified name.
+     *
+     * @param name the name of this section
+     */
     public Section(String name) {
         this.sectionName = name;
 	this.available = new AscendinglyOrderedListD<Table, Integer>();
 	this.serving = new AscendinglyOrderedList<SeatedParty, String>();
-	this.tableNames = new AscendinglyOrderedList<KeyedItem<String>, String>();
+	this.tableNames = new AscendinglyOrderedList<Name, String>();
     }
 
     /**
-     * Returns true if this section contains the specified tableName
+     * Returns true if this section contains the specified tableName.
      *
      * @param tableName the name of the table to search for
      * @return true if this section contains the specified tableName

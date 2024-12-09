@@ -1,5 +1,5 @@
 /**
- * A Keyed Item corresponding to a name.
+ * A concrete KeyedItem corresponding to a name, represented as a string.
  * @author Jamie Kahle & Scott Eno
  * */
 

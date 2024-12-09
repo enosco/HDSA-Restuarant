@@ -13,8 +13,9 @@ public class Driver
     {
 	List<Section> sections = new List<Section>(); // list of sections
 	DEQ<Party> waiting = new DEQ<Party>(); // waiting parties
+	
+	AscendinglyOrderedList<Name, String> parties = new AscendinglyOrderedList<Name, String>(); // list of all present party's names       
 
-	AscendinglyOrderedList<KeyedItem<String>, String> parties = new AscendinglyOrderedList<KeyedItem<String>, String>(); // list of all present party's names       
 	int waitingListSize = 0;
 
 	initialize(sections);
@@ -145,7 +146,7 @@ public class Driver
      * @param waitingListSize the number of customers waiting
      * @return the new size of the waiting queue
      */
-    public static int welcomeParty(DEQ<Party> waiting, AscendinglyOrderedList<KeyedItem<String>,String> parties, int waitingListSize) throws IOException
+    public static int welcomeParty(DEQ<Party> waiting, AscendinglyOrderedList<Name,String> parties, int waitingListSize) throws IOException
     {
 	    String name="";
 	    boolean naming = true;
@@ -276,7 +277,7 @@ public class Driver
      * @param waiting the waiting customers
      * @param parties the name of all present parties both waiting and being served
      */
-    public static void removeParty(List<Section> sections, DEQ<Party> waiting, AscendinglyOrderedList<KeyedItem<String>,String> parties) throws IOException
+    public static void removeParty(List<Section> sections, DEQ<Party> waiting, AscendinglyOrderedList<Name, String> parties) throws IOException
     {
 	// check if the restuarant is empty
 	boolean hasCustomers = false;
