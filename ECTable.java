@@ -34,9 +34,7 @@ public class ECTable extends KeyedItem<Seats> {
 	    return this.getKey();
     }
 
-
-        
     public String toString() {
-	return "table " + name + " with " + getKey() + " seats";
+	return "table " + name + " with " + getKey() + " spare seats";
     }
 }
