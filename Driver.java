@@ -46,7 +46,7 @@ public class Driver
 		    break;
 	    }
 	    
-	    System.out.print("You know the options. Make your menu selection now: ");
+	    System.out.print("You know the options.Make your menu selection now: ");
 	    option = Integer.parseInt(stdin.readLine().trim());
 	    System.out.println(option);
 	}
@@ -57,15 +57,15 @@ public class Driver
     public static void printMenu()
     {
 	System.out.println("\nSelect from the following menu:\n"
-			   + "\t0.  Close the restaurant.\n"
-			   + "\t1.   Customer party enters the restaurant.\n"
-			   + "\t2.   Customer party is seated and served.\n"
-			   + "\t3.   Customer party leaves the restaurant.\n"
-			   + "\t4.   Add a table.\n"
-			   + "\t5.   Remove a table.\n"
-			   + "\t6.   Display available tables.\n"
-			   + "\t7.   Display info about waiting customer parties.\n"
-			   + "\t8.   Display info about customer parties being served.\n\n");  
+			   + "\t0.\tClose the restaurant.\n"
+			   + "\t1.\tCustomer party enters the restaurant.\n"
+			   + "\t2.\tCustomer party is seated and served.\n"
+			   + "\t3.\tCustomer party leaves the restaurant.\n"
+			   + "\t4.\tAdd a table.\n"
+			   + "\t5.\tRemove a table.\n"
+			   + "\t6.\tDisplay available tables.\n"
+			   + "\t7.\tDisplay info about waiting customer parties.\n"
+			   + "\t8.\tDisplay info about customer parties being served.\n\n");  
     }
 
     public static void initialize(List<Section> sections) throws IOException
@@ -100,7 +100,7 @@ public class Driver
                 // Repeat until unique name is given
 		while (sect.hasTable(tableName)) {
 
-		    System.out.println("This table already exists! Please enter another table name.");
+		    System.out.println(" This table already exists! Please enter another table name.\n");
 		    
 		    System.out.print(">>Enter table name:");
 		    tableName = stdin.readLine().trim();
@@ -131,28 +131,29 @@ public class Driver
 
 	    while(naming)
 	    {
-		    try
-		    {
-			    System.out.print("Enter party name: ");
-			    name = stdin.readLine().trim();
-			    System.out.println(name);
-
-			    parties.add(new Name(name));
-			    naming = false;
-		    }
-		    catch(ListIndexOutOfBoundsException ex)
-		    {
-			    System.out.println("Name already exists, please choose a new one.");
-		    }
+		try
+		{
+		    System.out.print(">>Enter customer name : ");
+		    name = stdin.readLine().trim();
+		    System.out.println(name);
+		    
+		    parties.add(new Name(name));
+		    naming = false;
+		}
+		catch(ListIndexOutOfBoundsException ex)
+		{
+		    System.out.println("There already exists a customer with this name in the restaurant.\n\tPlease select another name.");
+		}
 	    }
 	    
 
-	    System.out.print("Enter party size: ");
+	    System.out.printf(">>Enter number of seats for customer %s: ", name);
 	    int size = Integer.parseInt(stdin.readLine().trim());
 	    System.out.println(size);
 
 
-	    System.out.print("Does your party have pets?(Y/N): ");
+//	    System.out.print(">>Does your party have pets? (Y/N): ");
+	    System.out.print(">>Does your part have pets (Y/N)?");
 	    String section = stdin.readLine().trim();
 	    System.out.println(section);
 
@@ -165,7 +166,7 @@ public class Driver
 	    return waitingListSize + 1;
 
 	    
-	// Prompt for partyName until unique name is given
+	// Prompt for partyName until unique name is givenc
         	// if waitingQueue contains party with partyName OR section.hasParty(partyName) == true → partyName is not unique, prompt again
 	// Prompt for group size
 	// Prompt for hasPets
@@ -176,94 +177,78 @@ public class Driver
     public static int seatParty(List<Section> sections, DEQ<Party> waiting, int waitingListSize)
     {
 	if (waiting.isEmpty()) {
-	    System.out.println("\tNo customers to serve!\n");
+	    System.out.println("No customers to serve!\n");
 	} else {
-		int numShifts = 0; //Keeps track of the number of parties that weren't able to be seated
+	    int numShifts = 0; //Keeps track of the number of parties that weren't able to be seated
 
-		
-		boolean seating = true;
-		Party party = waiting.dequeue();
-		Section section = sections.get(0); //placeholder so it is able to compile
+	    
+	    boolean seating = true;
+	    Party party = waiting.dequeue();
+	    Section section = sections.get(0); //placeholder so it is able to compile
 
-		do {			
-			switch(party.getSection())
-			{
-				case "pet-friendly":
-					section = sections.get(0);
-					break;
-				case "non-pet-friendly":
-					section = sections.get(1);
-					break;
-			}
-
-			Table table = section.seatParty(party);
-
-			if(table != null)
-			{
-				seating = false;
-				System.out.printf("Serving %s at %s%n%n.", party, table);
-			}
-			else
-			{
-			    System.out.printf("Could not find a table with %d seats for Customer %s%n", party.getSize(), party.getKey()); 
-			    numShifts++;
-			    waiting.enqueue(party);
-			    if(numShifts != waitingListSize)
-			    {
-			    	party = waiting.dequeue();
-			    }
-			}
-
-
-		} while(seating && numShifts != waitingListSize);
-
-
-		// return queue to original order
-		if(numShifts == waitingListSize && !seating)
+	    do {			
+		switch(party.getSection())
 		{
-			System.out.println("Unable to accomadate any party");
+		    case "pet-friendly":
+			section = sections.get(0);
+			break;
+		    case "non-pet-friendly":
+			section = sections.get(1);
+			break;
+		}
+
+		Table table = section.seatParty(party);
+
+		if(table != null)
+		{
+		    seating = false;
+		    System.out.printf("Serving %s at %s.%n%n", party, table);
 		}
 		else
 		{
-			waitingListSize--;
-
-			// changed '<' to '<=', check if this breaks anything
-			// 
-			if(numShifts <= (waitingListSize >> 1))
-			{
-				for(int i = 0; i<numShifts; i++)
-				{
-					waiting.enqueueFront(waiting.dequeueBack());
-				}
-			}
-			else
-			{
-				for(int i = 0; i<(waitingListSize-numShifts); i++)
-				{
-					waiting.enqueue(waiting.dequeue());
-				}
-			}
+		    System.out.printf("Could not find a table with %d seats for customer %s!%n", party.getSize(), party.getKey()); 
+		    numShifts++;
+		    waiting.enqueue(party);
+		    if(numShifts != waitingListSize)
+		    {
+			party = waiting.dequeue();
+		    }
 		}
 
 
+	    } while(seating && numShifts != waitingListSize);
 
 
+	    // return queue to original order
+	    
+	    if(numShifts == waitingListSize && seating)
+	    {
+		System.out.println("No party can be served!\n");
+	    }
+	    else
+	    {
+		System.out.println(); // newline for formatting
 
+		    
+		waitingListSize--;
 
-
-	// Dequeue nextParty from the front of waitingQueue
-	// Store nextParty’s name to keep track of original order of the queue
-	// Loop until nextParty is seated OR no party could be seated (nextParty == original front of queue)
-        	// Get the section that nextParty prefers
-	        // preferredSection.add(nextParty)
-                 	// Search through availableTables to find a table with the least number of excess seats.
-                        	// If a Table is found, create a new OccupiedTable from nextParty and Table and add it to occupiedTables
-                                	// .add(nextParty) returns true
-                         	// if .add(nextParty) returns false → enqueue nextParty, dequeue new nextParty, repeat
-                                 	// Display failure 
-	// If a party was successfully seated → rotate through queue items until original FIFO order is restored
-        	// dequeue and enqueue from waitingQueue until peek returns original front of queue -> Display success
-	// If no parties could be seated -->  Display failure
+		// changed '<' to '<=', check if this breaks anything
+		// 
+		if(numShifts < (waitingListSize >> 1))
+		{
+		    for(int i = 0; i<numShifts; i++)
+		    {
+			waiting.enqueueFront(waiting.dequeueBack());
+		    }
+		}
+		else
+		{
+		    for(int i = 0; i<(waitingListSize-numShifts); i++)
+		    {
+			waiting.enqueue(waiting.dequeue());
+		    }
+		}
+	    }
 	}
 	return waitingListSize;
     }
@@ -282,7 +267,7 @@ public class Driver
 	}
 
 	if (!hasCustomers) {
-	    System.out.println("\tNo customers are being served!\n");
+	    System.out.println("No customer is being served!\n");
 	} else {
 		System.out.print("Enter name of leaving party: ");
 		String name = stdin.readLine().trim();
@@ -355,7 +340,7 @@ public class Driver
 	// Repeat until unique name is given
 	while (sect.hasTable(tableName)) {
 	    
-	    System.out.printf(" This table already exists in the %s section! Please enter another table name", sect.getSectionName());
+	    System.out.printf(" This table already exists in the %s section! Please enter another table name%n", sect.getSectionName());
 	    
 	    System.out.print(">>Enter table name:");
 	    tableName = stdin.readLine().trim();
@@ -391,7 +376,7 @@ public class Driver
                  	// Throw NoSuchElementException
                    	// Driver catches exception, informs user that table could not be found
 
-	System.out.println(">>You are now adding a table.");
+	System.out.println(">>You are now remove a table.");
 
 	// Prompt user for section to add to
 	System.out.print(" To which section would you like to add this table?(P/N):");
@@ -408,7 +393,7 @@ public class Driver
 	Table table = sect.removeTable(tableName);
 
 	if (table != null) {
-	    System.out.printf("Table %s has been removed", table.getKey());
+	    System.out.printf("Table %s has been removed%n%n", table.getName());
 	} else {
 	    System.out.printf(" This table doesn't exists in the %s section! Please enter another table name.%n%n", sect.getSectionName()); 
 

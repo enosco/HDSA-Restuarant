@@ -12,6 +12,6 @@ public class Table extends KeyedItem<Integer> {
     }
         
     public String toString() {
-	return "table " + name + " with " + getKey() + " seats.";
+	return "table " + name + " with " + getKey() + " seats";
     }
 }
