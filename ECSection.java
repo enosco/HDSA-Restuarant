@@ -180,7 +180,7 @@ public class ECSection {
 
     public String toString()
     {
-	    return sectionName;
+	    return sectionName+"\n";
     }
 }
     

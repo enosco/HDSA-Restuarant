@@ -160,7 +160,7 @@ public class ECDriver
 	    boolean selectingSect = true;
 	    while(selectingSect)
 	    {
-	    System.out.print(">>Please choose from the following sectons:\n\t"+sections+"Enter your selection: ");
+	    System.out.print(">>Please choose from the following sectons:\n"+sections+"Enter your selection: ");
 	    section = stdin.readLine().trim();
 	    System.out.println(section);
 
@@ -482,7 +482,7 @@ public class ECDriver
 		    boolean selectingSection = true;
 			for(int i=0;i<sectionSize && selectingSection;i++)
 			{
-				if(sect.equals(sections.get(i).toString()))
+				if(sect.equals(sections.get(i).getSectionName()))
 				{
 					section = sections.get(i);
 					selectingSection = false;
