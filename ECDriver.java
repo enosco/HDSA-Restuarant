@@ -1,3 +1,9 @@
+/**
+ * Driver that handles all the IO relating to the restaurant.
+ *
+ * @author Jamie Kahle & Scott Eno
+ * */
+
 import java.io.*;
 public class ECDriver
 {
@@ -56,7 +62,9 @@ public class ECDriver
 	
 	System.out.println("We are closing the restaurant...Good Bye!");
     }
-
+/**
+ * Prints a list of menu options.
+ */
     public static void printMenu()
     {
 	System.out.println("\nSelect from the following menu:\n"
@@ -71,7 +79,9 @@ public class ECDriver
 			   + "\t8.\tDisplay info about customer parties being served.\n"
 			   +"\t9.\tAdd a new section\n\n");  
     }
-
+/**
+ * prompts user to create and add tables to each section in the restaurant.
+ */
     public static void initialize(List<ECSection> sections) throws IOException
     {
 	// Sections are hard coded for now. Later, prompt the user
@@ -127,7 +137,14 @@ public class ECDriver
 	// Print menu and begin
 	printMenu();
     }
-    
+  /**
+   * Prompts user to create a new party which is added to the waiting queue
+   *
+   * @param	waiting		the waiting customers
+   * @param	parties		the name of all present parties both waiting and being served
+   * @param	waitingListSize	the number of customers waiting
+   * @return			the new size of the waiting queue
+   */
     public static int welcomeParty(DEQ<Party> waiting, AscendinglyOrderedList<Name,String> parties, int waitingListSize, List<ECSection> sections) throws IOException
     {
 	    String name="";
@@ -186,7 +203,16 @@ public class ECDriver
 	// Create newParty
 	// Enqueue newParty onto waitingQueue
     }
-
+/**
+ * Attempts to seat parties in first come first serve order.
+ * If a party cannot be seated, this method will attempt to seat the next party in line until either a party is seated or no party could be seated.
+ *
+ * @param	sections		The sections within the restaurant
+ * @param	waiting			The waiting customers
+ * @param	waitingListSize		The number of customers waiting
+ *
+ * @return				the size of the waiting queue which may or may not be decremented depending on if a party was seated or not.
+ */
     public static int seatParty(List<ECSection> sections, DEQ<Party> waiting, int waitingListSize)
     {
 	if (waiting.isEmpty()) {
@@ -257,7 +283,14 @@ public class ECDriver
 	}
 	return waitingListSize;
     }
-
+/**
+ * Prompts user to specify a party that wishes to leave the restaurant.
+ * Displays leaving party and newly free table is successful, otherwise displays failure message.
+ *
+ * @param	sections	the sections within the restaurant
+ * @param	waiting		the waiting customers
+ * @param	parties		the name of all present parties
+ */
     public static void removeParty(List<ECSection> sections, DEQ<Party> waiting, AscendinglyOrderedList<Name,String> parties) throws IOException
     {
 	// check if the restuarant is empty
@@ -325,7 +358,11 @@ public class ECDriver
 	// Else → match not found, display failure
 	}
     }
-
+/**
+ * Prompts the user for a new table to add to the restaurant.
+ *
+ * @param	sections	the sections within the restaurant
+ */
     public static void addTable(List<ECSection> sections) throws IOException
     {
 	System.out.println(">>You are now adding a table.");
@@ -366,7 +403,12 @@ public class ECDriver
 	System.out.println();
 	
     }
-
+/**
+ * Prompts user for a table to remove from the restaurant and attempts to remove it.
+ * Displays information of table if successfully removed, otherwise display why it could not be removed.
+ *
+ * @param	sections	the sections within the restaurant
+ */
     public static void removeTable(List<ECSection> sections) throws IOException
     {
 	// Prompt user for section to remove from
@@ -406,7 +448,11 @@ public class ECDriver
 	}
 	
     }
-
+/**
+ * Displays all available tables in the restaurant by section.
+ *
+ * @param	sections	the sections within the restaurant
+ */
     public static void displayAvailableTables(List<ECSection> sections)
     {
 	int size = sections.size();
@@ -419,7 +465,11 @@ public class ECDriver
 	    System.out.println(sect.getAvailableTables());
 	}
     }
-
+/**
+ * Displays all parties waiting to be seated in FIFO order
+ *
+ * @param	waiting		all waiting customers
+ */
     public static void displayWaiting(DEQ<Party> waiting)
     {
 
@@ -431,7 +481,11 @@ public class ECDriver
 	}
 
     }
-
+/**
+ * Displays all parties being served in the restaurant by section.
+ *
+ * @param	sections	the sections within the restaurant
+ */
     public static void displayServing(List<ECSection> sections)
     {
 	// For each section
@@ -458,7 +512,11 @@ public class ECDriver
 	    System.out.println("\tNo customers are being served!\n");
 	}
     }
-
+/**
+ * prompts the user to add a section to the list of sections
+ *
+ * @param	sections	The current list of sections
+ * */
     public static void addSection(List<ECSection> sections) throws IOException
     {
 	    System.out.print("Enter your section name: ");
@@ -475,6 +533,14 @@ public class ECDriver
 	    }
     }
 
+
+/**
+ * Selects a section from the sections based on corresponding String
+ *
+ * @param	sections	The list of sections
+ * @param	sect		The name of the section
+ * @return			The section with the corresponding name
+ **/
     private static ECSection selectSection(List<ECSection> sections, String sect)
     {
 	    ECSection section = null;
