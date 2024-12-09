@@ -1,3 +1,13 @@
+/**
+ * Party class
+ *
+ * <p>
+ * Contains information about the size and section of a party, as well as defining the name as the keyed item<p>
+ *
+ * @author Jamie Kahle, Scott Eno
+ *
+ **/
+
 public class Party extends KeyedItem<String>
 {
     private int size;

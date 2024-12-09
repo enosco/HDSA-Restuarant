@@ -1,3 +1,11 @@
+/**
+ * Seated Party
+ *
+ * <p>Contains information about a seated party, this is after the party has been seated at a table in a section.<p>
+ *
+ * @author Jamie Kahle, Scott Eno
+ * */
+
 public class SeatedParty extends Party {
 
     private Table table;
