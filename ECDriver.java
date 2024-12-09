@@ -44,6 +44,9 @@ public class ECDriver
 		case 8: // display occupied tables
 		    displayServing(sections);
 		    break;
+		case 9:
+		    addSection(sections);
+		    break;
 	    }
 	    
 	    System.out.print("You know the options.Make your menu selection now: ");
@@ -65,7 +68,8 @@ public class ECDriver
 			   + "\t5.\tRemove a table.\n"
 			   + "\t6.\tDisplay available tables.\n"
 			   + "\t7.\tDisplay info about waiting customer parties.\n"
-			   + "\t8.\tDisplay info about customer parties being served.\n\n");  
+			   + "\t8.\tDisplay info about customer parties being served.\n"
+			   +"\t9.\tAdd a new section\n\n");  
     }
 
     public static void initialize(List<ECSection> sections) throws IOException
@@ -453,6 +457,22 @@ public class ECDriver
 	if (!hasCustomers) {
 	    System.out.println("\tNo customers are being served!\n");
 	}
+    }
+
+    public static void addSection(List<ECSection> sections) throws IOException
+    {
+	    System.out.print("Enter your section name: ");
+	    String section = stdin.readLine().trim();
+	    System.out.println(section);
+
+	    if(selectSection(sections,section) == null)
+	    {
+		    sections.add(sections.size(),new ECSection(section));
+	    }
+	    else
+	    {
+		    System.out.println("Section already exists");
+	    }
     }
 
     private static ECSection selectSection(List<ECSection> sections, String sect)
