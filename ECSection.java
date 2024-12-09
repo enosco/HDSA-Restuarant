@@ -139,12 +139,26 @@ public class ECSection {
 
 	    ECTable table = party.getTable();
 
-	    boolean unavailable = table.getSeats().getAvailableSeats() == 0;
-	    table.returnSeats(party.getSize());
-	    if(unavailable)
+	    int originalSeats = table.getSeats().getAvailableSeats();
+	    if(originalSeats != 0)
 	    {
-	    	available.add(table);
+		    int tableIndex= -1;
+		    int siz = available.size();
+		    for( int i=0; i<siz && tableIndex == -1; i++)
+		    {
+			    if(available.get(i).getName().equals(table.getName()))
+			    {
+				    tableIndex = i;
+			    }
+		    }
+		if(tableIndex != -1)
+		{
+	    		available.remove(tableIndex);
+		}
 	    }
+
+	    table.returnSeats(party.getSize());
+	    available.add(table);
 	}
 	
 	return party;
