@@ -1,0 +1,7 @@
+JAMIE KAHLE, SCOTT ENO
+
+We learned how to design and implement our own data structures.
+We reinforced our obect oriented programming principles with our implementation of the extra credit.
+We practiced efficient collaboration and code documentation.
+We practiced a workflow using git.
+We practiced creative problem solving.
