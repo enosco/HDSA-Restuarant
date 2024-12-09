@@ -1,10 +1,18 @@
+/*
+ * Purpose: Data Structure and Algorithms Project
+ * Status: Complete and thoroughly tested
+ * Last update: 12/9/24
+ * Submitted:  12/9/24
+ * Comment: test suite and sample run attached
+ * Comment: I declare that this is entirely my own work
+ * @author: Scott Eno, Jamie Kahle
+ * @version: 2024.12.9
+ */
+
 /**
- * Party class
+ * A Keyed Item that represents a party of customers with a name, size, and preferred section. A party is keyed by its name, which may be retrieved with the inherited getKey() method.
  *
- * <p>
- * Contains information about the size, section, and name of a party of customers. The party's name is used as its key, and thus the name is retrieved with getKey() inherited from KeyedItem.<p>
- *
- * @author Jamie Kahle, Scott Eno
+ * @author Jamie Kahle & Scott Eno
  *
  **/
 
@@ -14,8 +22,12 @@ public class Party extends KeyedItem<String>
     private String section;
 
     /**
-     * Constructs a new party
-     */
+     * Constructs a new party with the specified name, preferred section, and size.
+     *
+     * @param name the name of this Party
+     * @param section the preferred section of this Party
+     * @param size the size of this Party
+     */    
     public Party(String name, String section, int size) {
 	super(name);
 	this.section = section;

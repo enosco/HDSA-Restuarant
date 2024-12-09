@@ -8,13 +8,13 @@ import java.io.*;
 public class Driver
 {
     static BufferedReader stdin = new BufferedReader (new InputStreamReader(System.in));
-
+  
     public static void main(String[] args) throws IOException
     {
-	List<Section> sections = new List<Section>();
-	DEQ<Party> waiting = new DEQ<Party>();
+	List<Section> sections = new List<Section>(); // list of sections
+	DEQ<Party> waiting = new DEQ<Party>(); // waiting parties
 
-	AscendinglyOrderedList<Name, String> parties = new AscendinglyOrderedList<Name, String>();
+	AscendinglyOrderedList<KeyedItem<String>, String> parties = new AscendinglyOrderedList<KeyedItem<String>, String>(); // list of all present party's names       
 	int waitingListSize = 0;
 
 	initialize(sections);
@@ -61,9 +61,8 @@ public class Driver
     }
 
     /**
-     * Prints list of menu options.
+     * Prints a list of menu options.
      */
-
     public static void printMenu()
     {
 	System.out.println("\nSelect from the following menu:\n"
@@ -81,11 +80,11 @@ public class Driver
 
     /**
      * Prompts user to create and add tables to each section in the restaurant.
+     * 
      */    
     public static void initialize(List<Section> sections) throws IOException
     {
-	// Sections are hard coded for now. Later, prompt the user
-	// for the number of sections they want.
+	// Sections are hard coded for now.
 	sections.add(0, new Section("pet-friendly"));
 	sections.add(1, new Section("non-pet-friendly"));
 	
@@ -114,7 +113,7 @@ public class Driver
                 // Repeat until unique name is given
 		while (sect.hasTable(tableName)) {
 
-		    System.out.println(" This table already exists! Please enter another table name.\n");
+		    System.out.println(" This table already exists! Please enter another table name.");
 		    
 		    System.out.print(">>Enter table name:");
 		    tableName = stdin.readLine().trim();
@@ -141,9 +140,12 @@ public class Driver
     /**
      * Prompts user to create a new party which is added to the waiting queue
      *
-     * @return size of the waiting queue
+     * @param waiting the waiting customers
+     * @param parties the name of all present parties both waiting and being served
+     * @param waitingListSize the number of customers waiting
+     * @return the new size of the waiting queue
      */
-    public static int welcomeParty(DEQ<Party> waiting, AscendinglyOrderedList<Name,String> parties, int waitingListSize) throws IOException
+    public static int welcomeParty(DEQ<Party> waiting, AscendinglyOrderedList<KeyedItem<String>,String> parties, int waitingListSize) throws IOException
     {
 	    String name="";
 	    boolean naming = true;
@@ -190,7 +192,11 @@ public class Driver
      * If a party cannot be seated, this method will attempt to seat the party next
      * in line until either a party is seated or no party could be seated.
      *
-     * @return size of the waiting queue
+     * @param sections the sections within the restaurant
+     * @param waiting the waiting customers      
+     * @param waitingListSize the number of customers waiting
+     * 
+     * @return size of the waiting queue, which may be decremented if a party was seated
      */
     public static int seatParty(List<Section> sections, DEQ<Party> waiting, int waitingListSize) {
 	if (waiting.isEmpty()) {
@@ -206,8 +212,7 @@ public class Driver
 	    Section section = sections.get(0); //placeholder so it is able to compile
 
 	    do {			
-		switch(party.getSection())
-		{
+		switch(party.getSection()) {
 		    case "pet-friendly":
 			section = sections.get(0);
 			break;
@@ -216,56 +221,45 @@ public class Driver
 			break;
 		}
 
-		Table table = section.seatParty(party);
+		Table table = section.seatParty(party); // get next in line
 
-		if(table != null)
-		{
-		    //seating = false;
+		if(table != null) { // seatParty was successful, halt
 		    seated = true;
 		    System.out.printf("Serving %s at %s.%n%n", party, table);
-		}
-		else
-		{
+		} else { // could not find a suitable table, continue
+		    
 		    System.out.printf("Could not find a table with %d seats for customer %s!%n", party.getSize(), party.getKey()); 
 		    numShifts++;
-		    waiting.enqueue(party);
-
+		    waiting.enqueue(party); // place party at back of the line for now
 		    
-		    if(numShifts != waitingListSize)
-		    {
+		    if(numShifts != waitingListSize) { // continue until entire queue has been exhausted 
 			party = waiting.dequeue();
 		    }
 		}
-//	    } while(seating && numShifts != waitingListSize);
 	    } while (!seated && numShifts < waitingListSize);
 
-	    // return queue to original order	    
-//	    if(numShifts == waitingListSize && seating)
-
-	    // return queue to original FIFO order
-	    if (!seated) // no one was seated, queue has fully cycled
-	    {
+	    // return queue to original FIFO order 
+	    if (!seated) { // no one was seated, queue has fully cycled 
 		System.out.println("No party can be served!\n");
 	    }
-	    else // 
-	    {
-//		System.out.println("SHIFTING"); // newline for formatting
-
-		    
+	    else { // seating successful, shift to return to original order
+	    
 		waitingListSize--;
 
-		// changed '<' to '<=', check if this breaks anything	       
-		if(numShifts < (waitingListSize >> 1))
-		{
-		    for(int i = 0; i<numShifts; i++)
-		    {
+		// changed '<' to '<=', check if this breaks anything
+
+		// optimizes shifts so that the least required DEQ operations
+		// are required to return to the original order
+		if(numShifts <= (waitingListSize >> 1)) {
+	      
+		    for(int i = 0; i<numShifts; i++) {		   
 			waiting.enqueueFront(waiting.dequeueBack());
 		    }
 		}
-		else
-		{
-		    for(int i = 0; i<(waitingListSize-numShifts); i++)
-		    {
+		else {
+		    // shifted more than size / 2, it is quicker to rotate through the
+		    // remaining items than to return the rejected parties to the front
+		    for(int i = 0; i<(waitingListSize-numShifts); i++) {		    
 			waiting.enqueue(waiting.dequeue());
 		    }
 		}
@@ -277,8 +271,12 @@ public class Driver
     /**
      * Prompts user to specify a party that wishes to leave the restaurant.
      * Displays leaving party and newly free table is successful, otherwise displays failure message.
+     *
+     * @param sections the sections within the restaurant
+     * @param waiting the waiting customers
+     * @param parties the name of all present parties both waiting and being served
      */
-    public static void removeParty(List<Section> sections, DEQ<Party> waiting, AscendinglyOrderedList<Name,String> parties) throws IOException
+    public static void removeParty(List<Section> sections, DEQ<Party> waiting, AscendinglyOrderedList<KeyedItem<String>,String> parties) throws IOException
     {
 	// check if the restuarant is empty
 	boolean hasCustomers = false;
@@ -293,48 +291,47 @@ public class Driver
 
 	if (!hasCustomers) {
 	    System.out.println("No customer is being served!\n");
-	} else {
-	    System.out.print("Enter name of leaving party: ");
+	} else { // restuarant is not empty, continue
+
+	    // prompt user to specify party
+	    System.out.print(">>Enter the name of the customer that wants to leave: ");
 	    String name = stdin.readLine().trim();
 	    System.out.println(name);
 
-	    if(parties.search(name) < 0)
-	    {
-		System.out.println("Party does not exist");
-	    }
-	    else
-	    {
+	    if(parties.search(name) < 0) { // verify party exists
+		System.out.println("Party does not exist");		
+	    } else {
+		
 		boolean removed = false;
 		int sectionSize = sections.size();
 		SeatedParty party = null;
-		for( int i = 0; i < sectionSize && !removed; i++)
-		{
+		
+		for(int i = 0; i < sectionSize && !removed; i++) { // find section where party is located		   		   
 		    party = sections.get(i).removeParty(name);
-		    if(party != null)
-		    {
+		    
+		    if(party != null) { // found in current section and successfully removed
 			removed = true;
-		    }
+		    }		   
 		}
 
-		if(party == null)
-		{
-		    System.out.println("Party is in the waiting list\n");
-		}
-		else
-		{
-
+		if(party == null) { // party exists but is not seated, so they must be waiting
+		    System.out.printf(" Customer %s is not being served but waiting to be seated.%n%n", name);
+		} else {		    
 		    System.out.printf("%s has been freed.%n", party.getTable());
-		    System.out.printf("Customer %s is leaving the restaurant.%n%n", party.getKey());
+		    System.out.printf("Customer %s is leaving the restaurant.%n%n", party.getKey());		    
+		    // successful remove, update list of names
 		    parties.remove(parties.search(name));
-		    
-		    
 		}
-	    }	  
+		
+	    }
 	}
     }
-
+	
+	
     /**
      * Prompts user for a new table to add to the restaurant.
+     *
+     * @param sections the sections within the restaurant
      */
     public static void addTable(List<Section> sections) throws IOException
     {
@@ -380,13 +377,14 @@ public class Driver
      * Prompts user for a table to remove from the restaurant and attempts to remove it.
      * Displays information of table if successfully removed, otherwise displays why it
      * could not be removed.
+     * @param sections the sections within the restaurant
      */
     public static void removeTable(List<Section> sections) throws IOException
     {
-	System.out.println(">>You are now remove a table.");
+	System.out.println(">>You are now removing a table.");
 
 	// Prompt user for section to add to
-	System.out.print(" To which section would you like to add this table?(P/N):");
+	System.out.print(" From which section would you like to remove this table?(P/N):");
 	String sectStr = stdin.readLine().trim();
 	System.out.println(sectStr);
 
@@ -396,20 +394,25 @@ public class Driver
 	System.out.print(">>Enter table name:");
 	String tableName = stdin.readLine().trim();
 	System.out.println(tableName);
-	
-	Table table = sect.removeTable(tableName);
 
-	if (table != null) {
-	    System.out.printf("Table %s has been removed%n%n", table.getName());
-	} else {
-	    System.out.printf(" This table either does not exist or is currently occupied! Please enter a different table name!%n%n", sect.getSectionName()); 
+	try {
 
-	}
-	
+	    Table table = sect.removeTable(tableName); // attempt ot remove table
+	    
+	    if (table != null) { // table removed successfully
+		System.out.printf("Table %s has been removed.%n%n", table.getName());
+	    } else {
+		System.out.printf(" This table does not exist in the %s section! Please enter a different table name!%n%n", sect.getSectionName()); 
+	    }
+	    
+	} catch (RemoveOnOccupiedTableException e) { // specified table was found, but occupied
+	    System.out.println(" Can't remove a table that is currently in use!\n");
+	}	
     }
 
     /**
      * Displays all available tables in the restaurant by section.
+     * @param sections the sections within the restaurant
      */
     public static void displayAvailableTables(List<Section> sections)
     {
@@ -420,48 +423,53 @@ public class Driver
 	    System.out.printf("The following %d tables are available in the %s section:%n",
 			      sect.getAvailableCount(), sect.getSectionName());
 	    
-	    System.out.println(sect.getAvailableTables());
+	    System.out.print(sect.getAvailableTables());
 	}
+	System.out.println(); // newline for gap between menu prompt
     }
 
     /**
      * Displays all parties waiting to be seated in FIFO order.
+     * @param waiting the waiting customers          
      */    
     public static void displayWaiting(DEQ<Party> waiting)
     {
-
 	if (waiting.isEmpty()) {
 	    System.out.println("\tNo customers are waiting for tables!\n");
 	} else {
 	    System.out.println("The following customer parties are waiting for tables:");
 	    System.out.println(waiting);
 	}
-
     }
 
     /**
      * Displays all parties being served in the restaurant by section.
+     * @param sections the sections within the restaurant
      */
     public static void displayServing(List<Section> sections)
     {
 	boolean hasCustomers = false;
 	
-	int size = sections.size();
-	for (int i = 0; i < size; i++) {
+	int size = sections.size(); 
+	for (int i = 0; i < size; i++) { // displays info for each section
 	    Section sect = sections.get(i);
 
 	    if (sect.hasCustomers()) {		
 		hasCustomers = true;		
 
-		System.out.printf("The following customers are being served in the %s section:%n", sect.getSectionName());
-		System.out.println(sect.getServing());
+		String tense = (sect.getServingCount() > 1) ? "customers are" : "customer is"; 
+		
+		System.out.printf("The following %s being served in the %s section:%n",
+				      tense, sect.getSectionName());
+		
+		System.out.print(sect.getServing());
 
-	    }
-	    
+	    }	    
 	}
 
 	if (!hasCustomers) {
-	    System.out.println("\tNo customers are being served!\n");
+	    System.out.println("\tNo customers are being served!");
 	}
+	System.out.println(); // newline for gap between menu prompt
     }
 }

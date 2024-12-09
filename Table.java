@@ -1,17 +1,27 @@
+/*
+ * Purpose: Data Structure and Algorithms Project
+ * Status: Complete and thoroughly tested
+ * Last update: 12/9/24
+ * Submitted:  12/9/24
+ * Comment: test suite and sample run attached
+ * Comment: I declare that this is entirely my own work
+ * @author: Scott Eno, Jamie Kahle
+ * @version: 2024.12.9
+ */
 /**
- * class Table
- * <p> Contains the name of a table with the available seats of the table as its key. The seat count of this table can be retrieved with the inherited getKey() method from KeyedItem..
- * <p>
+ * A Keyed Item that represents a named table with a specific capacity. A table is keyed by its seat count, which may be retrieved with the inherited getKey().
  *
- * @author Jamie Kahle, Scott Eno
+ * @author Jamie Kahle & Scott Eno
  * */
 
 public class Table extends KeyedItem<Integer> {
-
+    
     private String name;
 
     /**
-     * Constructs a new table.
+     * Constructs a new table with the specified name and capacity.
+     * @param name the name of this Table
+     * @param seats the capacity of this table, which is also its key
      */
     public Table(String name, int seats) {
 	super(seats);
