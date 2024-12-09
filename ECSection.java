@@ -114,7 +114,7 @@ public class ECSection {
 	    table = available.remove(index);
 	    serving.add(new ECSeatedParty(party.getKey(), party.getSection(), party.getSize(), table));
 
-	    if(table.getSeats().getAvailableSeats() >0)
+	    if(table.getSeats().getAvailableSeats() > 0)
 	    {
 		    available.add(table);
 	    }
@@ -139,12 +139,12 @@ public class ECSection {
 
 	    ECTable table = party.getTable();
 
-	    if(table.getSeats().getAvailableSeats()==0)
+	    boolean unavailable = table.getSeats().getAvailableSeats() == 0;
+	    table.returnSeats(party.getSize());
+	    if(unavailable)
 	    {
 	    	available.add(table);
 	    }
-
-	    table.returnSeats(party.getSize());
 	}
 	
 	return party;
