@@ -1,3 +1,13 @@
+/**
+ * Section
+ *
+ * <p> Contains information about a certain section including the names of the tables, the parties that are seated, and the available tables <p>
+ *
+ * @author Jamie Kahle, Scott Eno
+ *
+ * */
+
+
 public class Section {
     
     private String sectionName;
@@ -23,7 +33,12 @@ public class Section {
 
 	return result;	
     }
-
+    /**
+     * Adds a table to the section
+     *
+     * @param 	table 	the table that is to be added
+     * @return		true if it was successful, false otherwise
+     * */
     public boolean addTable(Table table) {
 	
 	boolean added;
@@ -37,7 +52,12 @@ public class Section {
 
 	return added;
     }
-
+    /**
+     * Removes an available table from this section
+     *
+     * @param	tableName	The name of the table to be removed
+     * @return			The table that is reomved, null if the removal failed
+     * */
     public Table removeTable(String tableName) {
     //throws RemoveOccupiedTableException       
 	// search available for table name
@@ -71,7 +91,13 @@ public class Section {
 	
 	return target;
     }    
-    
+
+    /**
+     * Seats a party in this section
+     * 
+     * @param	party	the party to be seated
+     * @return 		The table the party is seated at
+     * */
     public Table seatParty(Party party) {		
 
 	int index = available.search(party.getSize());
@@ -90,7 +116,12 @@ public class Section {
 	}
 	return table;
     }
-
+    /**
+     * removes a party from this section
+     *
+     * @param	partyName	the name of the party to be removed
+     * @return			the SeatedParty that was removed, null if failed
+     * */
     public SeatedParty removeParty(String partyName) {
 	SeatedParty party;
 
@@ -127,12 +158,10 @@ public class Section {
     }
     
     public String getAvailableTables() {
-	// FIXME	       
 	return available.toString();
     }
 
     public String getServing() {
-	// FIXME
 	return serving.toString();
     }
 }
