@@ -186,7 +186,11 @@ public class Driver
     }
 
     /**
-     * 
+     * Attempts to seat parties in first come first serve order.
+     * If a party cannot be seated, this method will attempt to seat the party next
+     * in line until either a party is seated or no party could be seated.
+     *
+     * @return size of the waiting queue
      */
     public static int seatParty(List<Section> sections, DEQ<Party> waiting, int waitingListSize) {
 	if (waiting.isEmpty()) {
@@ -272,6 +276,7 @@ public class Driver
 
     /**
      * Prompts user to specify a party that wishes to leave the restaurant.
+     * Displays leaving party and newly free table is successful, otherwise displays failure message.
      */
     public static void removeParty(List<Section> sections, DEQ<Party> waiting, AscendinglyOrderedList<Name,String> parties) throws IOException
     {
